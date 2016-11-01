@@ -20,7 +20,7 @@ Sfon MapComp file:
 
 Methods:
 Replace ‘alltags’ with ‘Salp.anon’, and LG ‘0’ to ‘1’ in sequence csv file
-'sed 's/alltags/Salp.anon/g' list_extracted_tags_recd_all_tags_no_fst_JS_2016-06-15.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv'
+```sed 's/alltags/Salp.anon/g' list_extracted_tags_recd_all_tags_no_fst_JS_2016-06-15.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv```
 
 
 # Remove ‘>’ and header from Sfon csv file, and add the 0 for the totpos position
