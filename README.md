@@ -84,3 +84,6 @@ vi ./01_scripts/mapcomp
 awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_Sfontotpos.csv
 ```
 
+12. Copy the result file 03_mapped/Salp_mname_Sfontotpos.csv into the folder salp_anon_to_sfon/02_data
+
+Now open the GWAS script and follow instructions there

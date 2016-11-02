@@ -1,3 +1,6 @@
 *.fasta
 *.csv
 *.txt
+*.pdf
+*.RData
+*~
