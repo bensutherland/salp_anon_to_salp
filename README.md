@@ -17,7 +17,7 @@ Install the following pipeline:
 `mapcomp_iterative` https://bitbucket.org/bsuther7/mapcomp_iterative
 Note: this should have the script from E. Normandeau, `fasta_remove.py`
 
-#### A. Anchor
+### A. Anchor
 
 ** Data Preparation **
 ```
@@ -71,7 +71,7 @@ awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_
 # Copy the result file 03_mapped/Salp_mname_Sfontotpos.csv into the folder salp_anon_to_sfon/02_data
 ```
 
-#### B. Combine with Fst and plot
+### B. Combine with Fst and plot
 Open the GWAS script and follow instructions there   
 `GWAS_from_MapComp_2016-11-02.R`    
 This script will merge the Fst and positional data, and plot using the information on the Brook Charr map    
