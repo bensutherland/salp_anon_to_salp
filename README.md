@@ -15,17 +15,19 @@ Steps:
 Salp sequence file: `salp_tags.csv`
 Sfon MapComp file: `Sfon_v4.3_female_map.csv`
 
-# Make sure to add in python script needed to remove markers
+Make sure to add in python script needed to remove markers
 cp /Users/wayne/Desktop/Scripts_Eric/fasta_remove.py ./01_scripts/
 
 **Pipeline:**
 'mapcomp_iterative'
 
 Methods:
-1. Move the input data into the folder `02_data` and move into this folder `cd 02_data`
+1. Move the input data into the folder 02_data and then move into this folder
 
 2. Replace ‘alltags’ with ‘Salp.anon’, and LG ‘0’ to ‘1’ in sequence csv file
-```sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv```
+```
+sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv
+```
 
 3. Remove ‘>’ and header from Sfon csv file, and add the 0 for the totpos position
 ```sed 's/>//g' Sfon_v4.3_female_map.csv | grep -vE '^species' | awk -F, '{ print $1","$2","$3","0","$4","$5","$6 }' > sfon_markers.csv```
