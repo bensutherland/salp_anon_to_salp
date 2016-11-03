@@ -89,3 +89,6 @@ points(gwas.fst$totpos, gwas.fst$fst, type = "p", cex = 0.7)
 # More detail on markers of interest
 gwas.fst$totpos[which(gwas.fst$fst > 0.03)] # positions
 gwas.fst$mname[which(gwas.fst$fst > 0.03)] # marker names
+
+# find markers in BC38 with Fst > 0.1
+gwas.fst$mname[which(gwas.fst$fst > 0.1 & gwas.fst$totpos > 6957.1225 & gwas.fst$totpos < 7075.6536)]
