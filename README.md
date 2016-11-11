@@ -72,6 +72,10 @@ awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_
 ```
 
 ### B. Combine with Fst and plot
+Uses the following files from BAYESCAN:
+94snps-outliers_2016-11-11.txt # only the outliers
+Fst_6147SNPs_2016-11-11.txt # all markers
+
 Open the GWAS script and follow instructions there   
 `GWAS_from_MapComp_2016-11-02.R`    
 This script will merge the Fst and positional data, and plot using the information on the Brook Charr map    
