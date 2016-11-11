@@ -85,6 +85,23 @@ points(gwas.fst$totpos, gwas.fst$fst, type = "p", cex = 0.7)
 # save as 10 x 6
 
 
+##### OBTAIN ONLY SIGNIFICANT FST MNAMES ####
+outliers99 <- read.table(file = "../00_resources/99snps-outliers.txt", header = T)
+head(outliers99)
+names(outliers99) #"SNP" is the mname
+
+outliers99$SNP
+significantSNPs <- outliers99$SNP
+
+gwas.fst.sig <- gwas.fst[gwas.fst$mname %in% significantSNPs, ] # select only the significant snps
+
+points(gwas.fst.sig$totpos, gwas.fst.sig$fst, pch = 2, cex = 1)
+
+gwas.fst$totpos[gwas.fst$
+which(gwas.fst$mname==outliers99)
+
+
+
 ##### DATA EXPLORATION #####
 # More detail on markers of interest
 gwas.fst$totpos[which(gwas.fst$fst > 0.03)] # positions
