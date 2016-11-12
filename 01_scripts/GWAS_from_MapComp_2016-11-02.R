@@ -6,10 +6,9 @@ setwd("~/Documents/bernatchez/01_Sfon_projects/12_JS_Salp_loci_rel_to_sex/salp_a
 
 #rm(list=ls())
 
-
 #### Data Import ####
 # Set your input files file names
-input.fst.csv = "02_data/Fst_6230SNPs.csv"
+input.fst.txt = "02_data/Fst_6147SNPs_2016-11-11.txt"
 input.pos.csv = "02_data/Salp_mname_Sfontotpos.csv"
 
 # Load data
@@ -17,7 +16,9 @@ pos = read.csv(input.pos.csv, header = F, col.names = c("sp","mname","totpos"))
 head(pos)
 str(pos)
 
-fst = read.csv(file = input.fst.csv, header = T, col.names = c("stacks.chr","mname","stacks.locus","fst"))
+fst = read.table(file = input.fst.txt, header = T
+                 , col.names = c("stacks.chr","pos","mname", "prob", "log_PO", "q_val", "alpha", "fst")
+                 )
 head(fst)
 str(fst)
 
