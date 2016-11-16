@@ -56,6 +56,7 @@ len.chr
 
 # Find cumulative length
 cumul.leng <- cumsum(len.chr)
+chr.end.df <- as.data.frame(cumul.leng)
 
 # Create Positions
 left.grey <- c(0, cumul.leng[c(FALSE, TRUE)]) # find x-axis positions, left side
@@ -65,10 +66,10 @@ right.grey <- c(cumul.leng[c(TRUE, FALSE)])   # find x-axis positions, right sid
 #### Plot ####
 # Plot an empty plot
 #par(mfrow=c(1,1), mar= c(2,3,0.5,1) + 0.2, mgp = c(2,0.75,0))
-plot(x = c(0, max(cumul.leng)), y = c(0, max(gwas.fst$fst)+0.2), type = "n"
+plot(x = c(0, max(cumul.leng)), y = c(0, max(gwas.fst$fst+0.025)), type = "n"
      , xaxt = 'n'
-     , xlab = "Brook Charr LG", ylab = "Fst",
-     las = 1)
+     , xlab = "Brook Char LG", ylab = "Fst",
+     las = 1, cex.axis = 0.8)
 # Add grey boxes for LGs
 rect(xleft = left.grey[0:21], xright= right.grey[0:21],
      ybottom = 0, ytop = 11,
@@ -87,19 +88,20 @@ points(gwas.fst$totpos, gwas.fst$fst, type = "p", cex = 0.7)
 
 
 ##### OBTAIN ONLY SIGNIFICANT FST MNAMES ####
-outliers99 <- read.table(file = "../00_resources/99snps-outliers.txt", header = T)
-head(outliers99)
-names(outliers99) #"SNP" is the mname
+outliers94 <- read.table(file = "../00_resources/94snps-outliers_2016-11-11.txt", header = T)
+head(outliers94)
+names(outliers94) #"SNP" is the mname
 
-outliers99$SNP
-significantSNPs <- outliers99$SNP
+outliers94$SNP
+significantSNPs <- outliers94$SNP
 
 gwas.fst.sig <- gwas.fst[gwas.fst$mname %in% significantSNPs, ] # select only the significant snps
 
-points(gwas.fst.sig$totpos, gwas.fst.sig$fst, pch = 2, cex = 1)
+points(gwas.fst.sig$totpos, gwas.fst.sig$fst, pch = 3, cex = 1)
 
-gwas.fst$totpos[gwas.fst$
-which(gwas.fst$mname==outliers99)
+
+# export markers with positions
+write.csv(gwas.fst$mname, file = "salp_markers_with_Sfon_positions_2016-11-13.csv")
 
 
 
@@ -109,4 +111,11 @@ gwas.fst$totpos[which(gwas.fst$fst > 0.03)] # positions
 gwas.fst$mname[which(gwas.fst$fst > 0.03)] # marker names
 
 # find markers in BC38 with Fst > 0.1
-gwas.fst$mname[which(gwas.fst$fst > 0.1 & gwas.fst$totpos > 6957.1225 & gwas.fst$totpos < 7075.6536)]
+chr.end.df
+chr.start <- 5125.2076
+chr.end <- 5284.0927
+gwas.fst$mname[which(gwas.fst$fst > 0.005 & 
+                       gwas.fst$totpos > chr.start & 
+                       gwas.fst$totpos < chr.end)]
+
+gwas.fst$totpos[gwas.fst$mname==298178] #find out where a marker is
