@@ -68,7 +68,7 @@ right.grey <- c(cumul.leng[c(TRUE, FALSE)])   # find x-axis positions, right sid
 #par(mfrow=c(1,1), mar= c(2,3,0.5,1) + 0.2, mgp = c(2,0.75,0))
 plot(x = c(0, max(cumul.leng)), y = c(0, max(gwas.fst$fst+0.025)), type = "n"
      , xaxt = 'n'
-     , xlab = "Brook Char LG", ylab = "Fst",
+     , xlab = "Brook Char Linkage Group", ylab = "Fst",
      las = 1, cex.axis = 0.8)
 # Add grey boxes for LGs
 rect(xleft = left.grey[0:21], xright= right.grey[0:21],
@@ -82,7 +82,7 @@ position <- ((right.grey[1:21] - left.grey[1:21])/2) + left.grey[1:21]
 # Add axis and points
 axis(side = 1, at = position, labels = seq(from = 1, to = 41, by = 2)
      , cex.axis = 0.8 )
-points(gwas.fst$totpos, gwas.fst$fst, type = "p", cex = 0.7)
+points(gwas.fst$totpos, gwas.fst$fst, type = "p", cex = 0.8)
 
 # save as 10 x 6
 
