@@ -96,6 +96,7 @@ outliers94$SNP
 significantSNPs <- outliers94$SNP
 
 gwas.fst.sig <- gwas.fst[gwas.fst$mname %in% significantSNPs, ] # select only the significant snps
+length(gwas.fst.sig$mname) # how many outliers were present in the positioned markers?
 
 points(gwas.fst.sig$totpos, gwas.fst.sig$fst, pch = 3, cex = 1)
 
@@ -112,10 +113,12 @@ gwas.fst$mname[which(gwas.fst$fst > 0.03)] # marker names
 
 # find markers in BC38 with Fst > 0.1
 chr.end.df
-chr.start <- 5125.2076
-chr.end <- 5284.0927
+chr.start <- 1721.3238
+chr.end <- 1977.5399
 gwas.fst$mname[which(gwas.fst$fst > 0.005 & 
                        gwas.fst$totpos > chr.start & 
                        gwas.fst$totpos < chr.end)]
+
+gwas.fst.sig$mname[which(gwas.fst.sig$totpos > chr.start & gwas.fst.sig$totpos < chr.end)]
 
 gwas.fst$totpos[gwas.fst$mname==298178] #find out where a marker is
