@@ -13,9 +13,12 @@ Salp sequence file: `salp_tags.csv`
 Sfon MapComp file: `Sfon_v4.3_female_map.csv`
 Sfon genetic map information: `LG_plot.RData`
 
-Install the following pipeline:
-`mapcomp_iterative` https://bitbucket.org/bsuther7/mapcomp_iterative
-Note: this should have the script from E. Normandeau, `fasta_remove.py`
+Run MapComp iterative using the MapComp repo:  
+`mapcomp` https://github.com/enormandeau/mapcomp   
+Following instructions given at the top of the MapComp iterative script:  
+`01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`  
+To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
+ICSASG_v2 https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1  
 
 ### A. Anchor
 
