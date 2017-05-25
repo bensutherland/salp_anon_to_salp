@@ -15,8 +15,13 @@ Sfon genetic map information: `LG_plot.RData`
 
 Run MapComp iterative using the MapComp repo:  
 `mapcomp` https://github.com/enormandeau/mapcomp   
+
+Clone MapComp   
+`git clone https://github.com/enormandeau/mapcomp.git`
+
 Following instructions given at the top of the MapComp iterative script:  
 `01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`  
+
 To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
 ICSASG_v2 https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1  
 
@@ -41,11 +46,10 @@ wc -l *markers.csv
 # Combine Sfon and Salp anonymous markers to make input for `MapComp`
 cat salp.anon_markers.csv sfon_markers.csv > salp.anon_sfon_markers.csv
 
-# Copy `salp.anon_markers.csv` to the `mapcomp_iterative` folder and 
-cp salp.anon_sfon_markers.csv ./../../mapcomp_iterative/02_data/
+# Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
 
-# Move to the main directory for mapcomp_iterative
-cd ./../../mapcomp_iterative
+# Move to the main directory for mapcomp_iterative  
+
 ```
 
 ** MapComp Iterative Instruction **
@@ -60,13 +64,15 @@ wc -l 02_data/markers.fasta
 # Prepare MapComp_Iterative 
 Set the species name in the iterative mapping script
 # e.g.  ANON=”Salp.anon”
-vi ./01_scripts/remove_paired_anon_and_pair_again.sh
+vi ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
 
 # Set the max distance in the mapcomp script (1000000)
 vi ./01_scripts/mapcomp
 
+# Set the path to the genome file in both the mapcomp runall script ./mapcomp and 01_scripts/01_bwa_align_reads.sh   
+
 # Run MapComp iteratively 
-./01_scripts/remove_paired_anon_and_pair_again.sh
+./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
 
 # Collect results, this will be used by the GWAS script
 awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_Sfontotpos.csv
