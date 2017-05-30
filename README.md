@@ -46,36 +46,39 @@ Obtain MapComp iterative through the MapComp repo:
 Clone MapComp   
 `git clone https://github.com/enormandeau/mapcomp.git`
 
-Following instructions given at the top of the MapComp iterative script:  
+Follow instructions given at the top of the MapComp iterative script:  
 `01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`  
 
 To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
 ICSASG_v2 https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1  
 
-Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
-
-Move to the main directory for mapcomp_iterative  
 
 
 
 ** MapComp Iterative Instruction **
 ```
-# Prepare the marker.csv file to a .fasta file
+# Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
+
+# Move to the main directory for mapcomp_iterative  
+
+# Prepare the marker.csv file to a fasta file
 ./01_scripts/00_prepare_input_fasta_file_from_csv.sh 02_data/salp.anon_sfon_markers.csv
 
 # Check the markers.fasta 
 wc -l 02_data/markers.fasta
 `20112 02_data/markers.fasta`
 
-# Prepare MapComp_Iterative 
-Set the species name in the iterative mapping script
+# Prepare MapComp
+# Set the species name in the iterative mapping script
 # e.g.  ANON=”Salp.anon”
 vi ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
 
 # Set the max distance in the mapcomp script (1000000)
 vi ./01_scripts/mapcomp
 
-# Set the path to the genome file in both the mapcomp runall script ./mapcomp and 01_scripts/01_bwa_align_reads.sh   
+# Set the path to the genome file in both the following:   
+vi ./mapcomp   
+vi 01_scripts/01_bwa_align_reads.sh   
 
 # Run MapComp iteratively 
 ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
