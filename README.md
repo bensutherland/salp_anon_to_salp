@@ -1,6 +1,6 @@
 ## Salpinus GWAS figure based on S. fontinalis genetic map
 B. Sutherland
-2016-11-01
+2017-05-30
 
 ### Overview
 A) Anchor anonymous markers from Salvelinus alpinus onto the genetic map of S. fontinalis    
@@ -9,11 +9,39 @@ B) Combine the positioned markers with Fst values and plot in a GWAS figure.
 
 ### Input Data
 Put the following data into `02_data`    
-Salp sequence file: `salp_tags.csv`    
-Sfon MapComp file: `Sfon_v4.3_female_map.csv`
-Sfon genetic map information: `LG_plot.RData`
+From: `https://academic.oup.com/gbe/article-lookup/doi/10.1093/gbe/evw262`   
+* Sfon MapComp file: `additional_fileS3_sfon_female_map.txt`   
 
-Run MapComp iterative using the MapComp repo:  
+From: `NEW DOI`    
+* Salp sequence file: `salp_tags.csv`    
+* Sfon genetic map information: `LG_plot.RData`
+
+
+### A. Prepare   
+
+** Data Preparation **
+```
+# Move to the data folder
+cd 02_data
+
+# Replace ‘alltags’ with ‘Salp.anon’, and LG ‘0’ to ‘1’ in sequence csv file
+sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv
+
+# Remove ‘>’ and header from Sfon csv file, and add the 0 for the totpos position
+grep -vE '^species' additional_fileS3_sfon_female_map.txt | awk '{ print $1","$2","$3","0","$4","$5 }' > sfon_markers.csv
+
+# Confirm information on Sfon and Salp input files
+wc -l *markers.csv
+`6230 salp.anon_markers.csv`
+`3826 sfon_markers.csv`
+
+# Combine Sfon and Salp anonymous markers to make input for `MapComp`
+cat salp.anon_markers.csv sfon_markers.csv > salp.anon_sfon_markers.csv
+
+
+```
+
+Obtain MapComp iterative through the MapComp repo:  
 `mapcomp` https://github.com/enormandeau/mapcomp   
 
 Clone MapComp   
@@ -25,32 +53,11 @@ Following instructions given at the top of the MapComp iterative script:
 To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
 ICSASG_v2 https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1  
 
-### A. Anchor
-
-** Data Preparation **
-```
-# Move to the data folder
-cd 02_data
-
-# Replace ‘alltags’ with ‘Salp.anon’, and LG ‘0’ to ‘1’ in sequence csv file
-sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv
-
-# Remove ‘>’ and header from Sfon csv file, and add the 0 for the totpos position
-sed 's/>//g' Sfon_v4.3_female_map.csv | grep -vE '^species' | awk -F, '{ print $1","$2","$3","0","$4","$5","$6 }' > sfon_markers.csv
-
-# Confirm information on Sfon and Salp input files
-wc -l *markers.csv
-`6230 salp.anon_markers.csv`
-`3826 sfon_markers.csv`
-
-# Combine Sfon and Salp anonymous markers to make input for `MapComp`
-cat salp.anon_markers.csv sfon_markers.csv > salp.anon_sfon_markers.csv
-
 # Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
 
 # Move to the main directory for mapcomp_iterative  
 
-```
+
 
 ** MapComp Iterative Instruction **
 ```
