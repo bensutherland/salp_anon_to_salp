@@ -10,7 +10,7 @@ B) Combine the positioned markers with Fst values and plot in a GWAS figure.
 ### Input Data
 Put the following data into `02_data`    
 From: `https://academic.oup.com/gbe/article-lookup/doi/10.1093/gbe/evw262`   
-* Sfon MapComp file: `additional_fileS3_sfon_female_map.txt`   
+* Sfon Map file: `additional_fileS3_sfon_female_map.txt`   
 
 From: `NEW DOI`    
 * Salp sequence file: `salp_tags.csv`    
@@ -27,7 +27,7 @@ cd 02_data
 # Replace ‘alltags’ with ‘Salp.anon’, and LG ‘0’ to ‘1’ in sequence csv file
 sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv
 
-# Remove ‘>’ and header from Sfon csv file, and add the 0 for the totpos position
+# Remove header from Sfon map file, and add the 0 for the totpos position
 grep -vE '^species' additional_fileS3_sfon_female_map.txt | awk '{ print $1","$2","$3","0","$4","$5 }' > sfon_markers.csv
 
 # Confirm information on Sfon and Salp input files
@@ -40,7 +40,6 @@ cat salp.anon_markers.csv sfon_markers.csv > salp.anon_sfon_markers.csv
 
 
 ```
-
 Obtain MapComp iterative through the MapComp repo:  
 `mapcomp` https://github.com/enormandeau/mapcomp   
 
@@ -53,9 +52,9 @@ Following instructions given at the top of the MapComp iterative script:
 To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
 ICSASG_v2 https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1  
 
-# Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
+Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
 
-# Move to the main directory for mapcomp_iterative  
+Move to the main directory for mapcomp_iterative  
 
 
 
