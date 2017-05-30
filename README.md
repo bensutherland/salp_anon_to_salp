@@ -12,14 +12,13 @@ Put the following data into `02_data`
 From: `https://academic.oup.com/gbe/article-lookup/doi/10.1093/gbe/evw262`   
 * Sfon Map file: `additional_fileS3_sfon_female_map.txt`   
 
-From: `NEW DOI`    
+From: `https://doi.org/10.6084/m9.figshare.5051821.v1`    
 * Salp sequence file: `salp_tags.csv`    
 * Sfon genetic map information: `LG_plot.RData`
 
 
-### A. Prepare   
+### A. Prepare Data  
 
-** Data Preparation **
 ```
 # Move to the data folder
 cd 02_data
@@ -53,9 +52,7 @@ To obtain results as in the manuscript, run MapComp iterative with 10 iterations
 ICSASG_v2 https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1  
 
 
-
-
-** MapComp Iterative Instruction **
+### B. Prepare and Run MapComp Iteratively
 ```
 # Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
 
@@ -89,7 +86,7 @@ awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_
 # Copy the result file 03_mapped/Salp_mname_Sfontotpos.csv into the folder salp_anon_to_sfon/02_data
 ```
 
-### B. Combine with Fst and plot
+### C. Combine with Fst and plot
 Uses the following files from BAYESCAN:
 94snps-outliers_2016-11-11.txt # only the outliers
 Fst_6147SNPs_2016-11-11.txt # all markers
