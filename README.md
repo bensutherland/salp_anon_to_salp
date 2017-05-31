@@ -47,7 +47,7 @@ cd ../../
 
 ```
 Obtain MapComp iterative through the MapComp repo:  
-[MapComp] (https://github.com/enormandeau/mapcomp)   
+[MapComp](https://github.com/enormandeau/mapcomp)   
 
 Clone MapComp   
 `git clone https://github.com/enormandeau/mapcomp.git`
@@ -56,7 +56,7 @@ Follow instructions given at the top of the MapComp iterative script:
 `01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`  
 
 To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
-ICSASG_v2 https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1  
+[ICSASG_v2](https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1)  
 
 
 ### B. Prepare and Run MapComp Iteratively
