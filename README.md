@@ -1,21 +1,21 @@
-## Salpinus GWAS figure based on S. fontinalis genetic map
+## Salpinus GWAS figure based on _S. fontinalis_ genetic map
 B. Sutherland
 2017-05-30
 
 ### Overview
-A) Anchor anonymous markers from Salvelinus alpinus onto the genetic map of S. fontinalis    
-This will use the recent high-density genetic map of S. fontinalis (Sutherland et al. 2016) in combination with anonymous markers.    
+A) Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. fontinalis_    
+This will use the recent high-density genetic map of _S. fontinalis_ (Sutherland et al. 2016) in combination with anonymous markers.    
 B) Combine the positioned markers with Fst values and plot in a GWAS figure.   
 
 Clone this repo, run all code from within the main repo   
 
 ### Input Data
 Put the following data into `02_data`    
-From: `https://academic.oup.com/gbe/article-lookup/doi/10.1093/gbe/evw262`   
+From: [Supplemental Data from MapComp manuscript](https://academic.oup.com/gbe/article-lookup/doi/10.1093/gbe/evw262)   
 Download the supplemental files and take the following file   
 * Sfon Map file: `additional_fileS3_sfon_female_map.txt`   
 
-From: `https://doi.org/10.6084/m9.figshare.5051821.v1`    
+From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
 * Salp sequence file: `salp_tags.csv`    
 * Sfon genetic map information: `LG_plot.RData`
 * Salp outliers file: `94snps-outliers_2016-11-11.txt`   
@@ -47,7 +47,7 @@ cd ../../
 
 ```
 Obtain MapComp iterative through the MapComp repo:  
-`mapcomp` https://github.com/enormandeau/mapcomp   
+[MapComp] (https://github.com/enormandeau/mapcomp)   
 
 Clone MapComp   
 `git clone https://github.com/enormandeau/mapcomp.git`
