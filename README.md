@@ -7,14 +7,19 @@ A) Anchor anonymous markers from Salvelinus alpinus onto the genetic map of S. f
 This will use the recent high-density genetic map of S. fontinalis (Sutherland et al. 2016) in combination with anonymous markers.    
 B) Combine the positioned markers with Fst values and plot in a GWAS figure.   
 
+Clone this repo, run all code from within the main repo   
+
 ### Input Data
 Put the following data into `02_data`    
 From: `https://academic.oup.com/gbe/article-lookup/doi/10.1093/gbe/evw262`   
+Download the supplemental files and take the following file   
 * Sfon Map file: `additional_fileS3_sfon_female_map.txt`   
 
 From: `https://doi.org/10.6084/m9.figshare.5051821.v1`    
 * Salp sequence file: `salp_tags.csv`    
 * Sfon genetic map information: `LG_plot.RData`
+* Salp outliers file: `94snps-outliers_2016-11-11.txt`   
+* Fst values (all markers): `Fst_6147SNPs_2016-11-11.txt`   
 
 
 ### A. Prepare Data  
@@ -37,6 +42,8 @@ wc -l *markers.csv
 # Combine Sfon and Salp anonymous markers to make input for `MapComp`
 cat salp.anon_markers.csv sfon_markers.csv > salp.anon_sfon_markers.csv
 
+# Move out of the repo
+cd ../../
 
 ```
 Obtain MapComp iterative through the MapComp repo:  
@@ -56,7 +63,7 @@ ICSASG_v2 https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1
 ```
 # Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
 
-# Move to the main directory for mapcomp_iterative  
+# Move to the main mapcomp directory
 
 # Prepare the marker.csv file to a fasta file
 ./01_scripts/00_prepare_input_fasta_file_from_csv.sh 02_data/salp.anon_sfon_markers.csv
@@ -87,11 +94,9 @@ awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_
 ```
 
 ### C. Combine with Fst and plot
-Uses the following files from BAYESCAN:
-94snps-outliers_2016-11-11.txt # only the outliers
-Fst_6147SNPs_2016-11-11.txt # all markers
-
-Open the GWAS script and follow instructions there   
+```
+# Open the GWAS script in R and follow instructions there   
 `GWAS_from_MapComp_2016-11-02.R`    
-This script will merge the Fst and positional data, and plot using the information on the Brook Charr map    
-After running this script, you will have a GWAS figure with Fst by Brook Charr linkage group   
+# This script will merge the Fst and positional data, and plot using the information on the Brook Charr map    
+# After running this script, you will have a GWAS figure with Fst by Brook Charr linkage group   
+```
