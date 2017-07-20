@@ -25,12 +25,17 @@ Collect only the lines with female linkage groups that have markers with positio
 `awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
 
 Finally, to finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`    
+In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by AC-20a and b to one continuous linkage group with a cumulative cM position.   
+
+##### STILL TO CORRECT #####
 
 #  From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
 #  * Salp sequence file: `salp_tags.csv`    
 #  * Sfon genetic map information: `LG_plot.RData`
 #  * Salp outliers file: `94snps-outliers_2016-11-11.txt`   
 #  * Fst values (all markers): `Fst_6147SNPs_2016-11-11.txt`   
+
+##### END STILL TO CORRECT #####
 
 
 ### A. Prepare Data  
