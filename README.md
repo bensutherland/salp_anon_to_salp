@@ -24,7 +24,7 @@ From FileS2.xlsx, save out the only sheet as a .csv file and title it as `FileS2
 Collect only the lines with female linkage groups that have markers with positions:    
 `awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
 
-Finally, to finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`    
+Finally, to finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`. I suggest using Rstudio, setting working directory to this github repo.       
 In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by AC-20a and b to one continuous linkage group with a cumulative cM position.   
 
 ##### STILL TO CORRECT #####
