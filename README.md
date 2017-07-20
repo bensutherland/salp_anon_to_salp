@@ -1,25 +1,36 @@
-## Salpinus GWAS figure based on _S. fontinalis_ genetic map
+## Salpinus GWAS figure based on _S. alpinus_ genetic map
 B. Sutherland
-2017-05-30
+2017-07-20
 
 ### Overview
-A) Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. fontinalis_    
-This will use the recent high-density genetic map of _S. fontinalis_ (Sutherland et al. 2016) in combination with anonymous markers.    
+A) Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. alpinus_    
+This will use the high-density genetic map of _S. alpinus_ (Nugent et al. 2017) in combination with anonymous markers.    
 B) Combine the positioned markers with Fst values and plot in a GWAS figure.   
 
 Clone this repo, run all code from within the main repo   
 
 ### Input Data
 Put the following data into `02_data`    
-From: [Supplemental Data from MapComp manuscript](https://academic.oup.com/gbe/article-lookup/doi/10.1093/gbe/evw262)   
-Download the supplemental files and take the following file   
-* Sfon Map file: `additional_fileS3_sfon_female_map.txt`   
+From: [Supplemental Data from Nugent et al. 2017, G3](http://www.g3journal.org/content/7/2/543.supplemental)
+Download the supplemental files and take the following files   
+* Salp marker file: `FileS1.xlsx`    
+* Salp map file: `FileS2.xlsx`    
 
-From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
-* Salp sequence file: `salp_tags.csv`    
-* Sfon genetic map information: `LG_plot.RData`
-* Salp outliers file: `94snps-outliers_2016-11-11.txt`   
-* Fst values (all markers): `Fst_6147SNPs_2016-11-11.txt`   
+From FileS1.xlsx, save out the sheet labeled 'Map_SNPs' as a .csv file and title it as: `FileS1.csv`    
+Collect marker name and tag sequence from this file:
+`grep -v 'Polymorphism' FileS1.csv | awk -F, '{ print $1 "," $4 }' > salp_marker_and_seq.csv`   
+
+From FileS2.xlsx, save out the only sheet as a .csv file and title it as `FileS2.csv`    
+Collect only the lines with female linkage groups that have markers with positions:    
+`awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
+
+Finally, to finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`    
+
+#  From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
+#  * Salp sequence file: `salp_tags.csv`    
+#  * Sfon genetic map information: `LG_plot.RData`
+#  * Salp outliers file: `94snps-outliers_2016-11-11.txt`   
+#  * Fst values (all markers): `Fst_6147SNPs_2016-11-11.txt`   
 
 
 ### A. Prepare Data  
