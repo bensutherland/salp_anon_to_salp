@@ -80,5 +80,7 @@ salp <- salp[order(salp$LG, salp$pos),]
 head(salp)
 
 # Write out to use in MapComp iterative
-write.table(salp, file = "02_data/salp_merged_sorted_clean.csv", row.names = F, col.names = F, sep = ",")
+write.table(salp, file = "02_data/salp_merged_sorted_clean.csv"
+            , row.names = F, col.names = F, sep = ","
+            , quote = F)
 
