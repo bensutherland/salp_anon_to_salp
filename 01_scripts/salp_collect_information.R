@@ -5,6 +5,10 @@ setwd("~/Documents/bernatchez/01_Sfon_projects/14_JS_migration/salp_anon_to_salp
 marker.file <- "02_data/salp_female_map.csv" # markers
 seq.file <- "02_data/salp_marker_and_seq.csv" # seq
 
+# # for the male testing
+# male.marker.file <- "02_data/salp_male_map.csv"
+# marker.file <- male.marker.file
+
 # import seq file
 seq <- read.csv(file = seq.file, header = F, col.names = c("mname","seq"))
 head(seq)

@@ -28,6 +28,10 @@ From FileS2.xlsx, save out the only sheet as a .csv file and title it as `FileS2
 Collect only the lines with female linkage groups that have markers with positions:    
 `awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
 
+Same as above, but to collect male map:
+`echo awk -F, '{ print $1","$2","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty|UNA' - | grep -v 'Marker,Male,Map' > ./salp_male_map.csv`
+
+
 Finally, to finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`. I suggest using Rstudio, setting working directory to this github repo.       
 In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by AC-20a and b to one continuous linkage group with a cumulative cM position.   
 
@@ -108,16 +112,19 @@ vi 01_scripts/01_bwa_align_reads.sh
 # Run MapComp iteratively 
 ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
 
+
+# Collect results, this will be used by the GWAS script
+awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_Salptotpos.csv
+
+# Copy the result file 03_mapped/Salp_mname_Salptotpos.csv into the folder salp_anon_to_salp/02_data
+```
+
+
 #### THE REST IS STILL TO DO AND WILL BE SPECIFIC TO THE NEW FST VALUES
 
 
 
 #### THIS IS FROM THE OLD SCRIPT
-# Collect results, this will be used by the GWAS script
-awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_Sfontotpos.csv
-
-# Copy the result file 03_mapped/Salp_mname_Sfontotpos.csv into the folder salp_anon_to_sfon/02_data
-```
 
 ### C. Combine with Fst and plot
 ```
