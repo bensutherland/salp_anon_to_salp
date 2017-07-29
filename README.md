@@ -16,6 +16,10 @@ Download the supplemental files and take the following files
 * Salp marker file: `FileS1.xlsx`    
 * Salp map file: `FileS2.xlsx`    
 
+#  From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
+ * Salp sequence file: `salp_tags.csv`    
+
+
 From FileS1.xlsx, save out the sheet labeled 'Map_SNPs' as a .csv file and title it as: `FileS1.csv`    
 Collect marker name and tag sequence from this file:
 `grep -v 'Polymorphism' FileS1.csv | awk -F, '{ print $1 "," $4 }' > salp_marker_and_seq.csv`   
@@ -28,7 +32,7 @@ Finally, to finish preparing the input data, go to R to make some final adjustme
 In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by AC-20a and b to one continuous linkage group with a cumulative cM position.   
 
 ##### STILL TO CORRECT #####
-
+##### This material was for S. fontinalis map and sex-linked outliers
 #  From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
 #  * Salp sequence file: `salp_tags.csv`    
 #  * Sfon genetic map information: `LG_plot.RData`
@@ -38,25 +42,22 @@ In addition to format adjusting, this will also change linkage groups AC-20 and 
 ##### END STILL TO CORRECT #####
 
 
-### A. Prepare Data  
+### A. Prepare Data For MapComp 
 
 ```
 # Move to the data folder
 cd 02_data
 
-# Replace ‘alltags’ with ‘Salp.anon’, and LG ‘0’ to ‘1’ in sequence csv file
+# Replace ‘alltags’ with ‘Salp.anon’, and the arbitrarily named variable LG ‘0’ to ‘1’ in sequence csv file to make compatible with MapComp    
 sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv
 
-# Remove header from Sfon map file, and add the 0 for the totpos position
-grep -vE '^species' additional_fileS3_sfon_female_map.txt | awk '{ print $1","$2","$3","0","$4","$5 }' > sfon_markers.csv
-
-# Confirm information on Sfon and Salp input files
-wc -l *markers.csv
-`6230 salp.anon_markers.csv`
-`3826 sfon_markers.csv`
+# Confirm information on MapComp input files     
+wc -l salp.anon_markers.csv salp_merged_sorted_clean.csv
+`1656 salp_merged_sorted_clean.csv` (mapped markers)   
+`6230 salp.anon_markers.csv`   (anonymous markers)   
 
 # Combine Sfon and Salp anonymous markers to make input for `MapComp`
-cat salp.anon_markers.csv sfon_markers.csv > salp.anon_sfon_markers.csv
+`cat salp.anon_markers.csv salp_merged_sorted_clean.csv > salp.anon_salp.fem.map.csv` 
 
 # Move out of the repo
 cd ../../
@@ -68,8 +69,13 @@ Obtain MapComp iterative through the MapComp repo:
 Clone MapComp   
 `git clone https://github.com/enormandeau/mapcomp.git`
 
+# Move into the MapComp repo    
+`cd mapcomp`    
+
+##### Is this necessary?
 Follow instructions given at the top of the MapComp iterative script:  
 `01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`  
+##### end is this necessary
 
 To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
 [ICSASG_v2](https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1)  
@@ -78,23 +84,22 @@ To obtain results as in the manuscript, run MapComp iterative with 10 iterations
 ### B. Prepare and Run MapComp Iteratively
 ```
 # Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
-
-# Move to the main mapcomp directory
+cp ./../salp_anon_to_salp/02_data/salp.anon_salp.fem.map.csv ./02_data/markers.csv
 
 # Prepare the marker.csv file to a fasta file
-./01_scripts/00_prepare_input_fasta_file_from_csv.sh 02_data/salp.anon_sfon_markers.csv
+./01_scripts/00_prepare_input_fasta_file_from_csv.sh
 
 # Check the markers.fasta 
 wc -l 02_data/markers.fasta
-`20112 02_data/markers.fasta`
+`15772 02_data/markers.fasta`
 
-# Prepare MapComp
+# Prepare MapComp variables and parameters
 # Set the species name in the iterative mapping script
 # e.g.  ANON=”Salp.anon”
 vi ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
 
 # Set the max distance in the mapcomp script (1000000)
-vi ./01_scripts/mapcomp
+vi ./mapcomp
 
 # Set the path to the genome file in both the following:   
 vi ./mapcomp   
@@ -103,6 +108,11 @@ vi 01_scripts/01_bwa_align_reads.sh
 # Run MapComp iteratively 
 ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
 
+#### THE REST IS STILL TO DO AND WILL BE SPECIFIC TO THE NEW FST VALUES
+
+
+
+#### THIS IS FROM THE OLD SCRIPT
 # Collect results, this will be used by the GWAS script
 awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_Sfontotpos.csv
 
