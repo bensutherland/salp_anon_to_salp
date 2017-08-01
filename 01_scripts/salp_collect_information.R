@@ -1,13 +1,21 @@
 # R script to clean up the input files to be used in MapComp (iterative)
 setwd("~/Documents/bernatchez/01_Sfon_projects/14_JS_migration/salp_anon_to_salp")
 
+# Choose female or male map
+
 # used to combine the following files:
-marker.file <- "02_data/salp_female_map.csv" # markers
+#female markers 
+female.marker.file <- "02_data/salp_female_map.csv" # markers
+
+#male markers
+male.marker.file <- "02_data/salp_male_map.csv"
+
+# seq file
 seq.file <- "02_data/salp_marker_and_seq.csv" # seq
 
-# # for the male testing
-# male.marker.file <- "02_data/salp_male_map.csv"
-# marker.file <- male.marker.file
+marker.file <- female.marker.file
+marker.file <- male.marker.file
+
 
 # import seq file
 seq <- read.csv(file = seq.file, header = F, col.names = c("mname","seq"))
@@ -22,14 +30,23 @@ str(markers)
 # Match marker names between the two files:
 length(intersect(markers$mname, seq$mname)) #1656 matching
 
+# Check your LG names
+levels(markers$LG)
+
 # fix the LG issues (AC20 and AC4) in the markers file
 # find all rows with AC20b
 markers[which(markers$LG == "AC20a"),] 
 max(markers[which(markers$LG == "AC20a"),3])
-# total length of AC20a is 108.2 cM, so add this to AC20b
+
+### THIS SECTION IS EXTRA ###
+add.first.arm.value <- max(markers[which(markers$LG == "AC20a"),3])
+
+# total length of AC20a is add.first.arm.value (cM), so add this to AC20b
 
 which(markers$LG == "AC20b")
-markers[which(markers$LG == "AC20b"),3] + 108.2
+markers[which(markers$LG == "AC20b"),3] + add.first.arm.value
+
+### END THIS SECTION IS EXTRA ###
 
 # adds the first part of LG to the second (cumulative)
 # AC20
@@ -84,7 +101,13 @@ salp <- salp[order(salp$LG, salp$pos),]
 head(salp)
 
 # Write out to use in MapComp iterative
-write.table(salp, file = "02_data/salp_merged_sorted_clean.csv"
+
+# Female save out
+write.table(salp, file = "02_data/salp_male_merged_sorted_clean.csv"
+            , row.names = F, col.names = F, sep = ","
+            , quote = F)
+# Male save out
+write.table(salp, file = "02_data/salp_male_merged_sorted_clean.csv"
             , row.names = F, col.names = F, sep = ","
             , quote = F)
 

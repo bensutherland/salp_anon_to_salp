@@ -25,15 +25,31 @@ Collect marker name and tag sequence from this file:
 `grep -v 'Polymorphism' FileS1.csv | awk -F, '{ print $1 "," $4 }' > salp_marker_and_seq.csv`   
 
 From FileS2.xlsx, save out the only sheet as a .csv file and title it as `FileS2.csv`    
+
+#fix female to remove 'm' and - (e.g. after 20a-f)
 Collect only the lines with female linkage groups that have markers with positions:    
 `awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
 
 Same as above, but to collect male map:
-`echo awk -F, '{ print $1","$2","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty|UNA' - | grep -v 'Marker,Male,Map' > ./salp_male_map.csv`
-
+awk -F, '{ print $1","$2","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty|UNA' - | grep -v 'Marker,Male,Map' | sed 's/m\,/\,/g' | sed 's/\-\,/\,/g' > ./salp_male_map.csv
 
 Finally, to finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`. I suggest using Rstudio, setting working directory to this github repo.       
 In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by AC-20a and b to one continuous linkage group with a cumulative cM position.   
+
+
+# Fix the titles so that you can use all three female, male, consensus to compare
+# make consensus
+cat salp_male_merged_sorted_clean.csv salp_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv
+
+# Female
+sed 's/Salp/Salp.fem/g' salp_merged_sorted_clean.csv > salp_fem_sep_merged_sorted_clean.csv
+
+# male
+sed 's/Salp/Salp.male/g' salp_male_merged_sorted_clean.csv > salp_male_sep_merged_sorted_clean.csv
+
+Bring in brook char map
+cp /Users/wayne/Documents/bernatchez/01_Sfon_projects/12_JS_Salp_loci_rel_to_sex/salp_anon_to_sfon/02_data/sfon_markers.csv .
+
 
 ##### STILL TO CORRECT #####
 ##### This material was for S. fontinalis map and sex-linked outliers
