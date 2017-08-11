@@ -3,28 +3,28 @@ B. Sutherland
 2017-07-20
 
 ### Overview
-A) Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. alpinus_    
-This will use the high-density genetic map of _S. alpinus_ (Nugent et al. 2017) in combination with anonymous markers.    
-B) Combine the positioned markers with Fst values and plot in a GWAS figure.   
+In Part 1. Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. alpinus_. This will use the high-density genetic map of _S. alpinus_ (Nugent et al. 2017) in combination with anonymous markers.   
+In Part 2. Combine the positioned markers with Fst values and plot in a GWAS figure.   
 
 Clone this repo, run all code from within the main repo   
 
-### Input Data
+## Part 1. Anchoring anonymous markers   
+### A. Obtain input Data
 Put the following data into `02_data`    
+From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
+Download:     
+* Salp anon marker sequence file: `salp_tags.csv`    
+
 From: [Supplemental Data from Nugent et al. 2017, G3](http://www.g3journal.org/content/7/2/543.supplemental)
-Download the supplemental files and take the following files   
-* Salp marker file: `FileS1.xlsx`    
-* Salp map file: `FileS2.xlsx`    
+Download the supplemental files, specifically:    
+* Salp map marker file: `FileS1.xlsx`    
+* Salp map position file: `FileS2.xlsx`    
 
-#  From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
- * Salp sequence file: `salp_tags.csv`    
-
-
-From FileS1.xlsx, save out the sheet labeled 'Map_SNPs' as a .csv file and title it as: `FileS1.csv`    
+Within `FileS1.xlsx`, save the sheet 'Map_SNPs' as a .csv entitled `FileS1.csv`    
 Collect marker name and tag sequence from this file:
 `grep -v 'Polymorphism' FileS1.csv | awk -F, '{ print $1 "," $4 }' > salp_marker_and_seq.csv`   
 
-From FileS2.xlsx, save out the only sheet as a .csv file and title it as `FileS2.csv`    
+Within `FileS2.xlsx`, save the only sheet as a .csv file entitled `FileS2.csv`    
 
 #fix female to remove 'm' and - (e.g. after 20a-f)
 Collect only the lines with female linkage groups that have markers with positions:    
@@ -38,8 +38,6 @@ In addition to format adjusting, this will also change linkage groups AC-20 and 
 
 
 # Fix the titles so that you can use all three female, male, consensus to compare
-# make consensus
-cat salp_male_merged_sorted_clean.csv salp_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv
 
 # Female
 sed 's/Salp/Salp.fem/g' salp_merged_sorted_clean.csv > salp_fem_sep_merged_sorted_clean.csv
@@ -47,8 +45,12 @@ sed 's/Salp/Salp.fem/g' salp_merged_sorted_clean.csv > salp_fem_sep_merged_sorte
 # male
 sed 's/Salp/Salp.male/g' salp_male_merged_sorted_clean.csv > salp_male_sep_merged_sorted_clean.csv
 
-Bring in brook char map
-cp /Users/wayne/Documents/bernatchez/01_Sfon_projects/12_JS_Salp_loci_rel_to_sex/salp_anon_to_sfon/02_data/sfon_markers.csv .
+# make consensus
+cat salp_male_merged_sorted_clean.csv salp_fem_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv
+
+# Todo: move this to data collection and point to web URL (or remove)   
+Bring in Brook Charr map
+`cp /Users/wayne/Documents/bernatchez/01_Sfon_projects/12_JS_Salp_loci_rel_to_sex/salp_anon_to_sfon/02_data/sfon_markers.csv`
 
 
 ##### STILL TO CORRECT #####
@@ -58,17 +60,16 @@ cp /Users/wayne/Documents/bernatchez/01_Sfon_projects/12_JS_Salp_loci_rel_to_sex
 #  * Sfon genetic map information: `LG_plot.RData`
 #  * Salp outliers file: `94snps-outliers_2016-11-11.txt`   
 #  * Fst values (all markers): `Fst_6147SNPs_2016-11-11.txt`   
-
 ##### END STILL TO CORRECT #####
 
 
-### A. Prepare Data For MapComp 
+### B. Prepare Data For MapComp 
 
 ```
 # Move to the data folder
 cd 02_data
 
-# Replace ‘alltags’ with ‘Salp.anon’, and the arbitrarily named variable LG ‘0’ to ‘1’ in sequence csv file to make compatible with MapComp    
+# To the anonymous markers, replace ‘alltags’ with ‘Salp.anon’, and the arbitrarily named variable LG ‘0’ to ‘1’ in sequence csv file to make compatible with MapComp    
 sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv
 
 # Confirm information on MapComp input files     
@@ -104,13 +105,13 @@ To obtain results as in the manuscript, run MapComp iterative with 10 iterations
 ### B. Prepare and Run MapComp Iteratively
 ```
 # Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
-cp ./../salp_anon_to_salp/02_data/salp.anon_salp.fem.map.csv ./02_data/markers.csv
+`cp ./../salp_anon_to_salp/02_data/salp.anon_salp.fem.map.csv ./02_data/markers.csv`
 
 # Prepare the marker.csv file to a fasta file
-./01_scripts/00_prepare_input_fasta_file_from_csv.sh
+`./01_scripts/00_prepare_input_fasta_file_from_csv.sh`
 
 # Check the markers.fasta 
-wc -l 02_data/markers.fasta
+`wc -l 02_data/markers.fasta`
 `15772 02_data/markers.fasta`
 
 # Prepare MapComp variables and parameters
@@ -118,7 +119,7 @@ wc -l 02_data/markers.fasta
 # e.g.  ANON=”Salp.anon”
 vi ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
 
-# Set the max distance in the mapcomp script (1000000)
+# Set the max distance in the mapcomp script (e.g. 1000000 or 10000000)
 vi ./mapcomp
 
 # Set the path to the genome file in both the following:   
