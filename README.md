@@ -3,20 +3,17 @@ B. Sutherland
 2017-07-20
 
 ### Overview
-In Part 1. Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. alpinus_. This will use the high-density genetic map of _S. alpinus_ (Nugent et al. 2017) in combination with anonymous markers.   
-In Part 2. Combine the positioned markers with Fst values and plot in a GWAS figure.   
+Part 1: Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. alpinus_. This will use the high-density genetic map of _S. alpinus_ (Nugent et al. 2017) in combination with anonymous markers from _S. alpinus_..   
+Part 2: Combine the positioned markers with Fst values and plot in a GWAS figure.   
 
-Clone this repo, run all code from within the main repo   
+_Clone this repo, run all code from within the main repo_   
 
-## Part 1. Anchoring anonymous markers   
+## 1. Anchoring anonymous markers   
 ### A. Obtain input Data
 Put the following data into `02_data`    
-From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
-Download:     
+From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2) download:     
 * Salp anon marker sequence file: `salp_tags.csv`    
-
-From: [Supplemental Data from Nugent et al. 2017, G3](http://www.g3journal.org/content/7/2/543.supplemental)
-Download the supplemental files, specifically:    
+From: [Supplemental Data from Nugent et al. 2017, G3](http://www.g3journal.org/content/7/2/543.supplemental), download the supplemental files:    
 * Salp map marker file: `FileS1.xlsx`    
 * Salp map position file: `FileS2.xlsx`    
 
@@ -26,7 +23,7 @@ Collect marker name and tag sequence from this file:
 
 Within `FileS2.xlsx`, save the only sheet as a .csv file entitled `FileS2.csv`    
 
-#fix female to remove 'm' and - (e.g. after 20a-f)
+_Todo: fix female to remove 'm' and - (e.g. after 20a-f)_
 Collect only the lines with female linkage groups that have markers with positions:    
 `awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
 
@@ -37,30 +34,20 @@ Finally, to finish preparing the input data, go to R to make some final adjustme
 In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by AC-20a and b to one continuous linkage group with a cumulative cM position.   
 
 
-# Fix the titles so that you can use all three female, male, consensus to compare
+_Todo: Fix the titles so that you can use all three female, male, consensus to compare_
 
-# Female
-sed 's/Salp/Salp.fem/g' salp_merged_sorted_clean.csv > salp_fem_sep_merged_sorted_clean.csv
+Female
+`sed 's/Salp/Salp.fem/g' salp_merged_sorted_clean.csv > salp_fem_sep_merged_sorted_clean.csv`
 
-# male
-sed 's/Salp/Salp.male/g' salp_male_merged_sorted_clean.csv > salp_male_sep_merged_sorted_clean.csv
+Male
+`sed 's/Salp/Salp.male/g' salp_male_merged_sorted_clean.csv > salp_male_sep_merged_sorted_clean.csv`
 
-# make consensus
-cat salp_male_merged_sorted_clean.csv salp_fem_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv
+Consensus
+`cat salp_male_merged_sorted_clean.csv salp_fem_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv`
 
-# Todo: move this to data collection and point to web URL (or remove)   
+_Todo: move this to data collection and point to web URL (or remove)_   
 Bring in Brook Charr map
 `cp /Users/wayne/Documents/bernatchez/01_Sfon_projects/12_JS_Salp_loci_rel_to_sex/salp_anon_to_sfon/02_data/sfon_markers.csv`
-
-
-##### STILL TO CORRECT #####
-##### This material was for S. fontinalis map and sex-linked outliers
-#  From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)    
-#  * Salp sequence file: `salp_tags.csv`    
-#  * Sfon genetic map information: `LG_plot.RData`
-#  * Salp outliers file: `94snps-outliers_2016-11-11.txt`   
-#  * Fst values (all markers): `Fst_6147SNPs_2016-11-11.txt`   
-##### END STILL TO CORRECT #####
 
 
 ### B. Prepare Data For MapComp 
@@ -134,17 +121,8 @@ vi 01_scripts/01_bwa_align_reads.sh
 awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_Salptotpos.csv
 
 # Copy the result file 03_mapped/Salp_mname_Salptotpos.csv into the folder salp_anon_to_salp/02_data
-```
-
-
-#### THE REST IS STILL TO DO AND WILL BE SPECIFIC TO THE NEW FST VALUES
-
-
-
-#### THIS IS FROM THE OLD SCRIPT
 
 ### C. Combine with Fst and plot
-```
 # Open the GWAS script in R and follow instructions there   
 `01_scripts/GWAS_from_MapComp_2016-11-02.R`    
 # This script will merge the Fst and positional data, and plot using the information on the Brook Charr map    
