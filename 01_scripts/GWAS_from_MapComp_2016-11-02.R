@@ -21,6 +21,8 @@ str(pos)
 bayescan.fst <- read.table(file = "02_data/batch_1_miss25MigrantsRepAcousHistSexRem_EKASURcomb_bayescan_9jun2016_fst.txt"
                            , header = T
                            , col.names = c("Index", "BS.prob", "BS.log10.PO", "BS.qval", "BS.alpha", "BS.fst"))
+# fix bayescan zero values, set them to the next lowest decimal place possible (five sig figs)
+bayescan.fst$BS.qval[bayescan.fst$BS.qval < 0.00001] <- 0.00001
 
 PCAdapt.fst <- read.table(file = "02_data/PCAdapt_qvaluesALLsnps_K2_imputed_14sep2016.txt"
                            , header = T
@@ -169,13 +171,14 @@ points(gwas.fst$totpos, gwas.fst$fst, type = "p", cex = 0.8)
 
 
 colnames(gwas.fst)
-plot.statistics <- gwas.fst[,c(7 # currently BS.fst
-                               #,5 # BS.qval
+plot.statistics <- gwas.fst[,c(#7 # currently BS.fst
+                               5 # BS.qval
                                ,11 # PA.qval
                                ,12 # LF.pval
                                )]
 head(plot.statistics)
-neglog10.plot.stats <- cbind(plot.statistics[,1], -log10(plot.statistics)[,c(2,3)])
+#neglog10.plot.stats <- cbind(plot.statistics[,1], -log10(plot.statistics)[,c(2,3)])
+neglog10.plot.stats <- -log10(plot.statistics)
 head(neglog10.plot.stats)
 
 # find max position for each test statistic for the y-axis of the plot
@@ -188,15 +191,19 @@ max.pos
 
 max.pos.buffer <- max.pos+max.pos*0.1 # add 10 % to the max position
 
-yaxis.titles <- c("bayescan.fst","PCAdapt -log10(qval)", "LFMM -log10(adj pval)")
-low.sig.thresh <- c(NA,1.3,1.2)
-high.sig.thresh <- c(NA,2,2)
+#yaxis.titles <- c("bayescan.fst","PCAdapt -log10(qval)", "LFMM -log10(adj pval)")
+yaxis.titles <- c("bayescan -log10(qval)","PCAdapt -log10(qval)", "LFMM -log10(adj pval)")
+low.sig.thresh <- -log10(0.05)
+high.sig.thresh <- -log10(0.01)
 
 ## Plot all three
 par(mfrow=c(3,1), mar= c(4,3,0.5,1) + 0.2, mgp = c(2,0.75,0))
 
 for(i in 1:3){
-  plot(x = c(0, max(cumul.leng)), y = c(0, max.pos.buffer[i]), type = "n"
+  plot(x = c(0, max(cumul.leng))
+       #, y = c(0, max.pos.buffer[i]) # dynamic position
+       , y = c(0, 6.5) # fixed position
+       , type = "n"
        , xaxt = 'n'
        , xlab = "Arctic Char Linkage Group"
        , ylab = yaxis.titles[i],
@@ -215,8 +222,8 @@ for(i in 1:3){
   points(gwas.fst$totpos, neglog10.plot.stats[,i], type = "p", cex = 0.8)
   
   # Plot APPROX. signif thresholds
-  abline(h = low.sig.thresh[i], lty = 2)
-  abline(h = high.sig.thresh[i], lty = 3)
+  abline(h = low.sig.thresh, lty = 2)
+  abline(h = high.sig.thresh, lty = 3)
 }
 
 # save as 10 x 6
