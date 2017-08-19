@@ -9,13 +9,18 @@ setwd("~/Documents/bernatchez/01_Sfon_projects/14_JS_migration/salp_anon_to_salp
 #### Data Import ####
 # Set your input files file names
 input.fst.txt = "02_data/batch_1_miss25MigrantsRepAcousHistSexRem_EKASURcomb_bayescan_9jun2016_fst.txt"
-input.pos.csv = "02_data/Salp_mname_Salptotpos.csv"
 index.file = "02_data/tagID_sequences_wIndex_6136SNPsSexRem_30Jun2016.txt"
+
+# position data
+#input.pos.csv = "02_data/Salp_mname_Salptotpos.csv"
+input.pos.csv = "02_data/Salp_mname_Salptotpos_consensus.csv"
+
 
 # Load data
 pos = read.csv(input.pos.csv, header = F, col.names = c("sp","mname","totpos"))
 head(pos)
 str(pos)
+max(pos$totpos)
 
 # Import various test statistics
 bayescan.fst <- read.table(file = "02_data/batch_1_miss25MigrantsRepAcousHistSexRem_EKASURcomb_bayescan_9jun2016_fst.txt"
@@ -200,7 +205,7 @@ high.sig.thresh <- -log10(0.01)
 par(mfrow=c(3,1), mar= c(4,3,0.5,1) + 0.2, mgp = c(2,0.75,0))
 
 for(i in 1:3){
-  plot(x = c(0, max(cumul.leng))
+  plot(x = c(0, max(pos$totpos))
        #, y = c(0, max.pos.buffer[i]) # dynamic position
        , y = c(0, 6.5) # fixed position
        , type = "n"
