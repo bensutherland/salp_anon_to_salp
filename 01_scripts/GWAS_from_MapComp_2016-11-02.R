@@ -206,7 +206,7 @@ for(i in 1:3){
        las = 1, cex.axis = 0.8)
   # Add grey boxes for LGs
   rect(xleft = left.grey[0:18], xright= right.grey[0:19],
-       ybottom = 0, ytop = 11,
+       ybottom = 0, ytop = 6.5,
        col = c("lightgrey"),
        border=NA)
   # Add LG labels
