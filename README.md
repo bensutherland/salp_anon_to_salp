@@ -3,8 +3,9 @@ B. Sutherland
 2017-07-20
 
 ### Overview
-Part 1: Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. alpinus_. This will use the high-density genetic map of _S. alpinus_ (Nugent et al. 2017) in combination with anonymous markers from _S. alpinus_..   
-Part 2: Combine the positioned markers with Fst values and plot in a GWAS figure.   
+*Part 1*: Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. alpinus_. This will use the high-density genetic map of _S. alpinus_ (Nugent et al. 2017) in combination with anonymous markers from _S. alpinus_.   
+    
+*Part 2*: Combine the positioned markers with Fst values and plot in a GWAS figure.   
 
 _Clone this repo, run all code from within the main repo_   
 
@@ -23,18 +24,14 @@ Collect marker name and tag sequence from this file:
 
 Within `FileS2.xlsx`, save the only sheet as a .csv file entitled `FileS2.csv`    
 
-_Todo: fix female to remove 'm' and - (e.g. after 20a-f)_
 Collect only the lines with female linkage groups that have markers with positions:    
 `awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
 
 Same as above, but to collect male map:
-awk -F, '{ print $1","$2","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty|UNA' - | grep -v 'Marker,Male,Map' | sed 's/m\,/\,/g' | sed 's/\-\,/\,/g' > ./salp_male_map.csv
+`awk -F, '{ print $1","$2","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty|UNA' - | grep -v 'Marker,Male,Map' | sed 's/m\,/\,/g' | sed 's/\-\,/\,/g' > ./salp_male_map.csv`
 
 Finally, to finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`. I suggest using Rstudio, setting working directory to this github repo.       
-In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by AC-20a and b to one continuous linkage group with a cumulative cM position.   
-
-
-_Todo: Fix the titles so that you can use all three female, male, consensus to compare_
+In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by _a_ and _b_ arms to one continuous linkage group with a cumulative cM position.   
 
 Female
 `sed 's/Salp/Salp.fem/g' salp_merged_sorted_clean.csv > salp_fem_sep_merged_sorted_clean.csv`
@@ -45,8 +42,7 @@ Male
 Consensus
 `cat salp_male_merged_sorted_clean.csv salp_fem_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv`
 
-_Todo: move this to data collection and point to web URL (or remove)_   
-Bring in Brook Charr map
+Bring in Brook Charr map    
 `cp /Users/wayne/Documents/bernatchez/01_Sfon_projects/12_JS_Salp_loci_rel_to_sex/salp_anon_to_sfon/02_data/sfon_markers.csv`
 
 
@@ -71,23 +67,18 @@ wc -l salp.anon_markers.csv salp_merged_sorted_clean.csv
 cd ../../
 
 ```
-Obtain MapComp iterative through the MapComp repo:  
-[MapComp](https://github.com/enormandeau/mapcomp)   
-
-Clone MapComp   
+Obtain MapComp iterative through the MapComp repo below     
 `git clone https://github.com/enormandeau/mapcomp.git`
 
-# Move into the MapComp repo    
+Move into the MapComp repo    
 `cd mapcomp`    
 
-##### Is this necessary?
 Follow instructions given at the top of the MapComp iterative script:  
 `01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`  
-##### end is this necessary
 
 To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
 [ICSASG_v2](https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1)  
-
+From: Lien et al., 2016. The Atlantic Salmon genome provides insights into rediploidization. Nature 533: 200–205.     
 
 ### B. Prepare and Run MapComp Iteratively
 ```
