@@ -1,11 +1,12 @@
-## Salpinus GWAS figure based on _S. alpinus_ genetic map
-B. Sutherland
-2017-07-20
+## Arctic Charr anonymous marker placement on genetic map
+B. Sutherland    
+2017-07-20    
+This methods description accompanies the results presented in the following manuscript:    
+Moore J.-S., Harris L. N., Le Luyer J., Sutherland B. J. G., Rougemont Q., Tallman R. F., Fisk A. T., Bernatchez L., 2017 Migration harshness drives habitat choice and local adaptation in anadromous Arctic Char: evidence from integrating population genomics and acoustic telemetry. bioRxiv: 1–39.
 
 ### Overview
-*Part 1*: Anchor anonymous markers from _Salvelinus alpinus_ onto the genetic map of _S. alpinus_. This will use the high-density genetic map of _S. alpinus_ (Nugent et al. 2017) in combination with anonymous markers from _S. alpinus_.   
-    
-*Part 2*: Combine the positioned markers with Fst values and plot in a GWAS figure.   
+**Part 1** will anchor anonymous markers onto a high-density genetic map of _Salvelinus alpinus_ (Nugent et al. 2017)   
+**Part 2** will combine positioned markers with population genetic values (e.g. Fst) and plot in a GWAS figure   
 
 _Clone this repo, run all code from within the main repo_   
 
