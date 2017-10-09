@@ -2,7 +2,7 @@
 B. Sutherland    
 2017-07-20    
 This methods description accompanies the results presented in the following manuscript:    
-Moore J.-S., Harris L. N., Le Luyer J., Sutherland B. J. G., Rougemont Q., Tallman R. F., Fisk A. T., Bernatchez L., 2017 Migration harshness drives habitat choice and local adaptation in anadromous Arctic Char: evidence from integrating population genomics and acoustic telemetry. bioRxiv: 1–39.
+Moore J.-S., Harris L. N., Le Luyer J., Sutherland B. J. G., Rougemont Q., Tallman R. F., Fisk A. T., Bernatchez L., 2017 Migration harshness drives habitat choice and local adaptation in anadromous Arctic Char: evidence from integrating population genomics and acoustic telemetry. bioRxiv: 1–39. doi: https://doi.org/10.1101/138545
 
 ### Overview
 **Part 1** will anchor anonymous markers onto a high-density genetic map of _Salvelinus alpinus_ (Nugent et al. 2017)   
@@ -55,7 +55,7 @@ wc -l salp.anon_markers.csv consensus_merged_sorted_clean.csv
 `6230 salp.anon_markers.csv`   (anonymous markers)   
 
 iii) Combine all markers to make input for MapComp    
-`cat salp.anon_markers.csv consensus_merged_sorted_clean.csv > salp.anon_salp.fem.map.csv`     
+`cat salp.anon_markers.csv consensus_merged_sorted_clean.csv > salp.anon_salp.map.csv`     
 
 iv) Move back up to the main folder, and clone in the MapComp repo   
 `cd ../../`    
@@ -73,10 +73,10 @@ From: Lien et al., 2016. The Atlantic Salmon genome provides insights into redip
 
 ### C. Prepare and run MapComp iteratively
 i) Copy the combined output from above into the `mapcomp/02_data` folder   
-`cp ./../salp_anon_to_salp/02_data/<combined_data_here> ./02_data/markers.csv`
+`cp ./../02_data/salp.anon_salp.map.csv ./02_data/markers.csv`
 
 ii) Prepare the marker.csv file to a fasta file
-`./01_scripts/00_prepare_input_fasta_file_from_csv.sh`
+`./01_scripts/00_prepare_input_fasta_file_from_csv.sh ./02_data/markers.csv`
 
 iii) Check the markers.fasta 
 `grep -c '>' 02_data/markers.fasta`
