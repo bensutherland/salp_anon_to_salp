@@ -10,28 +10,29 @@ Moore J.-S., Harris L. N., Le Luyer J., Sutherland B. J. G., Rougemont Q., Tallm
 
 _Clone this repo, run all code from within the main repo_   
 
-## 1. Anchoring anonymous markers   
-### A. Obtain input Data
-Put the following data into `02_data`    
-From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2) download:     
+## 1. Position anonymous markers   
+### Obtain input data and put in 02_data
+From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)       
 * Salp anon marker sequence file: `salp_tags.csv`    
-From: [Supplemental Data from Nugent et al. 2017, G3](http://www.g3journal.org/content/7/2/543.supplemental), download the supplemental files:    
+
+From: [Supplemental Data from Nugent et al. 2017, G3](http://www.g3journal.org/content/7/2/543.supplemental)    
 * Salp map marker file: `FileS1.xlsx`    
 * Salp map position file: `FileS2.xlsx`    
 
-Within `FileS1.xlsx`, save the sheet 'Map_SNPs' as a .csv entitled `FileS1.csv`    
-Collect marker name and tag sequence from this file:
+i) Within `FileS1.xlsx`, save the sheet 'Map_SNPs' as a .csv entitled `FileS1.csv`    
+
+ii) Collect marker name and sequence from this file:    
 `grep -v 'Polymorphism' FileS1.csv | awk -F, '{ print $1 "," $4 }' > salp_marker_and_seq.csv`   
 
-Within `FileS2.xlsx`, save the only sheet as a .csv file entitled `FileS2.csv`    
+iii) Within `FileS2.xlsx`, save the only sheet as a .csv file entitled `FileS2.csv`    
 
-Collect only the lines with female linkage groups that have markers with positions:    
+iv) Collect only the lines with female linkage groups that have markers with positions (and a little formatting):    
 `awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
 
-Same as above, but to collect male map:
+v) Same as above, but collect the male map:
 `awk -F, '{ print $1","$2","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty|UNA' - | grep -v 'Marker,Male,Map' | sed 's/m\,/\,/g' | sed 's/\-\,/\,/g' > ./salp_male_map.csv`
 
-Finally, to finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`. I suggest using Rstudio, setting working directory to this github repo.       
+vi) To finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`. I suggest using Rstudio, setting working directory to this github repo.       
 In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by _a_ and _b_ arms to one continuous linkage group with a cumulative cM position.   
 
 Female
