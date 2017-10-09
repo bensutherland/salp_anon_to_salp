@@ -29,22 +29,19 @@ iii) Within `FileS2.xlsx`, save the only sheet as a .csv file entitled `FileS2.c
 iv) Collect only the lines with female linkage groups that have markers with positions (and a little formatting):    
 `awk -F, '{ print $1","$3","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty' - | grep -v 'Marker,Female,Map' - > ./salp_female_map.csv`
 
-v) Same as above, but collect the male map:
+v) Same as above, but collect the male map:    
 `awk -F, '{ print $1","$2","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty|UNA' - | grep -v 'Marker,Male,Map' | sed 's/m\,/\,/g' | sed 's/\-\,/\,/g' > ./salp_male_map.csv`
 
 vi) Finish preparing the data using R (i.e. formats, make AC-20 and AC-4 continuous naming and cumulative position instead of LG arm split).   
-I suggest opening the following script in RStudio, setting working directory to this repo.       
+I suggest opening the following script in RStudio, setting working directory to this repo. Will have to run twice, changing setting from female to male to get both maps.       
 `01_scripts/salp_collect_information.R`   
-This will produce salp_male_merged_sorted_clean.csv and salp_merged_sorted_clean.csv
 
-Female
-`sed 's/Salp/Salp.fem/g' salp_merged_sorted_clean.csv > salp_fem_sep_merged_sorted_clean.csv`
+This will produce:   
+`salp_female_merged_sorted_clean.csv` (1656 records)   
+`salp_male_merged_sorted_clean.csv`  (1489 records)    
 
-Male
-`sed 's/Salp/Salp.male/g' salp_male_merged_sorted_clean.csv > salp_male_sep_merged_sorted_clean.csv`
-
-Consensus
-`cat salp_male_merged_sorted_clean.csv salp_fem_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv`
+Create a consensus file    
+`cat salp_male_merged_sorted_clean.csv salp_female_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv`
 
 
 ### B) Format data for MapComp 
