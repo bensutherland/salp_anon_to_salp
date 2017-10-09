@@ -10,8 +10,8 @@ Moore J.-S., Harris L. N., Le Luyer J., Sutherland B. J. G., Rougemont Q., Tallm
 
 _Clone this repo, run all code from within the main repo_   
 
-## 1. Position anonymous markers   
-### Obtain input data and put in 02_data
+## Part 1: Position anonymous markers   
+### A) Obtain input data and put in 02_data
 From: [Figshare data](https://doi.org/10.6084/m9.figshare.5051821.v2)       
 * Salp anon marker sequence file: `salp_tags.csv`    
 
@@ -32,8 +32,10 @@ iv) Collect only the lines with female linkage groups that have markers with pos
 v) Same as above, but collect the male map:
 `awk -F, '{ print $1","$2","$4 }' FileS2.csv | sed 's/,AC-/,AC/g' | sed 's/,-/,empty/g'  | grep -vE 'NA|empty|UNA' - | grep -v 'Marker,Male,Map' | sed 's/m\,/\,/g' | sed 's/\-\,/\,/g' > ./salp_male_map.csv`
 
-vi) To finish preparing the input data, go to R to make some final adjustments to prepare for `MapComp`. I suggest using Rstudio, setting working directory to this github repo.       
-In addition to format adjusting, this will also change linkage groups AC-20 and AC-4 from the current format of split by _a_ and _b_ arms to one continuous linkage group with a cumulative cM position.   
+vi) Finish preparing the data using R (i.e. formats, make AC-20 and AC-4 continuous naming and cumulative position instead of LG arm split).   
+I suggest opening the following script in RStudio, setting working directory to this repo.       
+`01_scripts/salp_collect_information.R`   
+This will produce salp_male_merged_sorted_clean.csv and salp_merged_sorted_clean.csv
 
 Female
 `sed 's/Salp/Salp.fem/g' salp_merged_sorted_clean.csv > salp_fem_sep_merged_sorted_clean.csv`
@@ -44,80 +46,65 @@ Male
 Consensus
 `cat salp_male_merged_sorted_clean.csv salp_fem_merged_sorted_clean.csv > consensus_merged_sorted_clean.csv`
 
-Bring in Brook Charr map    
-`cp /Users/wayne/Documents/bernatchez/01_Sfon_projects/12_JS_Salp_loci_rel_to_sex/salp_anon_to_sfon/02_data/sfon_markers.csv`
 
+### B) Format data for MapComp 
 
-### B. Prepare Data For MapComp 
+i) Move to the data folder, and replace anonymous title ‘alltags’ with ‘Salp.anon’. Also for anonymous markers make the LG 0 variable all equal LG 1.   
+`sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv`   
 
-```
-# Move to the data folder
-cd 02_data
-
-# To the anonymous markers, replace ‘alltags’ with ‘Salp.anon’, and the arbitrarily named variable LG ‘0’ to ‘1’ in sequence csv file to make compatible with MapComp    
-sed 's/alltags/Salp.anon/g' salp_tags.csv | sed 's/anon,0/anon,1/g' > salp.anon_markers.csv
-
-# Confirm information on MapComp input files     
-wc -l salp.anon_markers.csv salp_merged_sorted_clean.csv
-`1656 salp_merged_sorted_clean.csv` (mapped markers)   
+ii) Confirm information on MapComp input files     
+wc -l salp.anon_markers.csv consensus_merged_sorted_clean.csv   
+`3145 consensus_merged_sorted_clean.csv` (mapped markers)   
 `6230 salp.anon_markers.csv`   (anonymous markers)   
 
-# Combine Sfon and Salp anonymous markers to make input for `MapComp`
-`cat salp.anon_markers.csv salp_merged_sorted_clean.csv > salp.anon_salp.fem.map.csv` 
+iii) Combine all markers to make input for MapComp    
+`cat salp.anon_markers.csv consensus_merged_sorted_clean.csv > salp.anon_salp.fem.map.csv`     
 
-# Move out of the repo
-cd ../../
+iv) Move back up to the main folder, and clone in the MapComp repo   
+`cd ../../`    
+`git clone https://github.com/enormandeau/mapcomp.git`    
 
-```
-Obtain MapComp iterative through the MapComp repo below     
-`git clone https://github.com/enormandeau/mapcomp.git`
-
-Move into the MapComp repo    
+v) Move into the MapComp repo   
 `cd mapcomp`    
 
-Follow instructions given at the top of the MapComp iterative script:  
+vi) Follow instructions given at the top of the MapComp iterative script:  
 `01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`  
 
 To obtain results as in the manuscript, run MapComp iterative with 10 iterations, with the default distance setting, and use the Atlantic Salmon reference genome as the genome intermediate:   
 [ICSASG_v2](https://www.ncbi.nlm.nih.gov/assembly/GCF_000233375.1)  
 From: Lien et al., 2016. The Atlantic Salmon genome provides insights into rediploidization. Nature 533: 200–205.     
 
-### B. Prepare and Run MapComp Iteratively
-```
-# Copy `salp.anon_markers.csv` to the `mapcomp/02_data` folder   
-`cp ./../salp_anon_to_salp/02_data/salp.anon_salp.fem.map.csv ./02_data/markers.csv`
+### C. Prepare and run MapComp iteratively
+i) Copy the combined output from above into the `mapcomp/02_data` folder   
+`cp ./../salp_anon_to_salp/02_data/<combined_data_here> ./02_data/markers.csv`
 
-# Prepare the marker.csv file to a fasta file
+ii) Prepare the marker.csv file to a fasta file
 `./01_scripts/00_prepare_input_fasta_file_from_csv.sh`
 
-# Check the markers.fasta 
-`wc -l 02_data/markers.fasta`
-`15772 02_data/markers.fasta`
+iii) Check the markers.fasta 
+`grep -c '>' 02_data/markers.fasta`
+`9375 02_data/markers.fasta`
 
-# Prepare MapComp variables and parameters
-# Set the species name in the iterative mapping script
-# e.g.  ANON=”Salp.anon”
-vi ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
+iv) Prepare MapComp variables and parameters
+Using vi, or similar, set the species name in the iterative mapping script   
+e.g.  `ANON=”Salp.anon”`    
+`vi ./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`
 
-# Set the max distance in the mapcomp script (e.g. 1000000 or 10000000)
-vi ./mapcomp
+Set the max distance in the mapcomp script (e.g. 1000000 or 10000000)
+`vi ./mapcomp`
 
-# Set the path to the genome file in both the following:   
-vi ./mapcomp   
-vi 01_scripts/01_bwa_align_reads.sh   
+Set the path to the genome file in both the following:   
+`vi ./mapcomp`   
+`vi 01_scripts/01_bwa_align_reads.sh`   
 
-# Run MapComp iteratively 
-./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh
+v) Run MapComp iteratively 
+`./01_scripts/utility_scripts/remove_paired_anon_and_pair_again.sh`
+
+vi) Collect results, this will be used in Part 2.    
+`awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_Salptotpos.csv`
+
+vii) Copy the result file from the previous step into the folder `salp_anon_to_salp/02_data`   
 
 
-# Collect results, this will be used by the GWAS script
-awk '{ print $1","$5","$11 }' 03_mapped/pairings_out.txt > 03_mapped/Salp_mname_Salptotpos.csv
-
-# Copy the result file 03_mapped/Salp_mname_Salptotpos.csv into the folder salp_anon_to_salp/02_data
-
-### C. Combine with Fst and plot
-# Open the GWAS script in R and follow instructions there   
-`01_scripts/GWAS_from_MapComp_2016-11-02.R`    
-# This script will merge the Fst and positional data, and plot using the information on the Brook Charr map    
-# After running this script, you will have a GWAS figure with Fst by Brook Charr linkage group   
-```
+## Part 2: Combine with population genetic values and plot     
+i) Open the script entitled `01_scripts/GWAS_from_MapComp_2016-11-02.R` in R and follow instructions there. This will produce Figure 7 from the associated manuscript.       
