@@ -105,3 +105,9 @@ vii) Copy the result file from the previous step into the folder `salp_anon_to_s
 
 ## Part 2: Combine with population genetic values and plot     
 i) Open the script entitled `01_scripts/GWAS_from_MapComp_2016-11-02.R` in R and follow instructions there. This will produce Figure 7 from the associated manuscript.       
+
+This will require the following inputs:    
+* Index file (matches Index to identifier)   
+* Position info (output from Part 1 `Salp_mname_Salptotpos_consensus.csv`)   
+* Results for test statistics (bayescan, PCAdapt, LFMM)   
+* Map file (output from Part 1 `consensus_merged_sorted_clean.csv`)    
