@@ -15,7 +15,7 @@ res.PCAdapt = "02_data/PCAdapt_qvaluesALLsnps_K2_imputed_14sep2016.txt"
 res.LFMM = "02_data/lfmm_adjPvalues_imputed_14Sep2016.txt"
 
 
-# Load
+# Load files
 index <- read.table(file = index.file, header = T)
 
 pos <- read.csv(input.pos.csv, header = F, col.names = c("sp","mname","totpos"))
@@ -35,12 +35,12 @@ LFMM.fst <- read.table(file = res.LFMM
                           , header = T
                           , col.names = c("LF.adj.pval","LF.Z","Index"))
 
-
 # Transform bayescan 0 values to 0.00001 (sig fig basement of bayescan)
 bayescan.fst$BS.qval[bayescan.fst$BS.qval < 0.00001] <- 0.00001
 
+
 # Merge data
-# Merge dataframes together by 'Index'
+# Merge test statistic dataframes together by 'Index'
 bayescan.PCAdapt <- merge(x = bayescan.fst, y = PCAdapt.fst, by = "Index")
 all.test.stats <- merge(x = bayescan.PCAdapt, y = LFMM.fst, by = "Index")
 colnames(all.test.stats)
@@ -49,8 +49,7 @@ str(all.test.stats)
 # Rename main dataframe
 fst <- all.test.stats
 
-
-# Merge with index file ID column to fst file from index file
+# Merge test statistic data with index file that contains tag 'ID' using index column
 colnames(index)
 colnames(fst)
 length(intersect(fst$Index, index$Index)) # check concordance first
@@ -58,32 +57,33 @@ length(intersect(fst$Index, index$Index)) # check concordance first
 fst.indexed <- merge(fst, index, by = "Index") # merge
 colnames(fst.indexed)
 
-# Check
+# Check that the two have been fully added together
 dim(fst)
 dim(index)
 dim(fst.indexed)
 
-
-# Merge with position file
-# Check
+# Merge indexed test statistics file with position file
+# First check correspondence
 x <- fst.indexed$ID
 y <- pos$mname
 str(x)
 str(y)
-length(intersect(x,y)) # are all from Fst given positions (note: almost)
+length(intersect(x,y)) 
+# Note: not all positioned data have corresponding values in test statistic,
+# because the sex-linked SNPs were removed from the analysis (n = 94 tags)
 
-# Sort data file
+# Second, sort both files to be merged
+# Sort data file by ID
 fst.sorted <- fst.indexed[order(fst.indexed$ID),]
 head(fst.sorted)
-
-# rename ID to mname for consistency
+# rename ID to mname for consistency with position file
 colnames(fst.sorted)[which(colnames(fst.sorted)=="ID")] <- "mname"
 
-# Sort pos file
+# Sort pos file by mname (aka ID)
 pos.sorted <- pos[order(pos$mname),]
 head(pos.sorted)
 
-# Merge
+# Finally, merge test statistic file with position file
 gwas.fst <- merge(fst.sorted, pos.sorted, by = "mname")
 head(gwas.fst)
 dim(gwas.fst)
@@ -93,6 +93,7 @@ dim(gwas.fst)
 # To plot stats using map coordinates
 map.file = "02_data/consensus_merged_sorted_clean.csv"
 
+# Import
 map <- read.csv(file = map.file, header = F
                 , col.names = c("species","LG","pos","blank","marker","seq"))
 head(map) # note is not ordered (for LG10)
@@ -104,7 +105,7 @@ map.sorted <- map[order(map$LG, map$pos),]
 # piece that works:
 #tail(map$pos[which(map$LG == 3)], n = 1)
 
-# Collect the length of each chr (req that map is sorted)
+# Collect the length of each chr (Note: requires that map is sorted)
 len.chr = NULL
 for(i in 1:37){
   len.chr = c(len.chr, 
@@ -113,11 +114,11 @@ for(i in 1:37){
 
 len.chr
 
-# Find cumulative length
+# Find cumulative length of each chromosome adding the one before
 cumul.leng <- cumsum(len.chr)
 chr.end.df <- as.data.frame(cumul.leng)
 
-# Create Positions
+# Create positions of grey boxes for plotting
 left.grey <- c(0, cumul.leng[c(FALSE, TRUE)]) # find x-axis positions, left side
 right.grey <- c(cumul.leng[c(TRUE, FALSE)])   # find x-axis positions, right side
 
@@ -126,18 +127,6 @@ position <- ((right.grey[1:18] - left.grey[1:18])/2) + left.grey[1:18]
 
 
 ##### Plot the three test statistics ####
-# Plot an empty plot
-#par(mfrow=c(1,1), mar= c(2,3,0.5,1) + 0.2, mgp = c(2,0.75,0))
-
-# these are the characteristics we want to plot:
-# plot.statistics <- as.data.frame(c(
-#   #  -log10(gwas.fst$BS.qval)
-#     gwas.fst$BS.fst
-#   , -log10(gwas.fst$PA.qval)
-#   , -log10(gwas.fst$LF.adj.pval))
-# )
-
-
 colnames(gwas.fst)
 plot.statistics <- gwas.fst[,c(#7 # currently BS.fst
                                5 # BS.qval
@@ -150,7 +139,7 @@ neglog10.plot.stats <- -log10(plot.statistics)
 head(neglog10.plot.stats)
 
 
-# find max position for each test statistic for the y-axis of the plot
+# Find max position for each test statistic for the y-axis of the plot
 max.pos <- NULL
 for(i in 1:3){
   max.pos = c(max.pos, max(neglog10.plot.stats[,i], na.rm = T)
@@ -173,7 +162,7 @@ for(i in 1:3){
   plot(x = c(0, max(pos$totpos))
        #, y = c(0, max.pos.buffer[i]) # dynamic position
        , y = c(0, 6.5) # fixed position
-       , type = "n"
+       , type = "n" # plot empty chart, will fill in with points later
        , xaxt = 'n'
        , xlab = "Arctic Char Linkage Group"
        , ylab = yaxis.titles[i],
@@ -191,7 +180,7 @@ for(i in 1:3){
   # Plot points
   points(gwas.fst$totpos, neglog10.plot.stats[,i], type = "p", cex = 0.8)
   
-  # Plot APPROX. signif thresholds
+  # Plot signif thresholds
   abline(h = low.sig.thresh, lty = 2)
   abline(h = high.sig.thresh, lty = 3)
 }
@@ -199,8 +188,11 @@ for(i in 1:3){
 # save as 10 x 6
 
 
-##### Data Exploration #####
+
+##### Data exploration (not required) #####
+# The rest is for data exploration only
 # More detail on markers of interest
+
 # gwas.fst$totpos[which(gwas.fst$fst > 0.03)] # positions
 # gwas.fst$mname[which(gwas.fst$fst > 0.03)] # marker names
 
